@@ -27,10 +27,28 @@ This repository uses mlflow to manage the experiments.
 If in the step above you added a family of MIPs not from the above list, say called MIP-medium, you must create a config in cmippy/configs called MIP-medium.yaml and populate it with the appropriate settings (see one of the other configs for details).
 Here is where you change the device the NN is stored on (default is CUDA), change size of neural network, change loss function, ect. Default settings are settings used in our paper.
 
-from now on we will demonstrate on the toy instance, CFLP-toy, using the GUROBI solver.
+from now on we will demonstrate on the toy instance, CFLP-toy, using the GUROBI solver. To change the solver change the appropriate entry in the config.
 
 3. Generate training data for the neural network.
 ```bash
-bash scripts/bash/generate_train_data.bash CFLP-toy <N-CORES> gurobi
+bash scripts/bash/generate_train_data.bash CFLP-toy <N-CORES>
 ```
 This will populate a folder in instance_data/gurobi/CFLP-toy with training data from the GUROBI solves.
+For large instances this can take many hours. We recommend using many cores if possible.
+
+2. Train the neural network.
+```bash
+bash scripts/bash/train.bash CFLP-toy
+```
+This will create an mlruns folder and save training information into it.
+We recommend using mlflow to monitor the training and to easily observe the results.
+You can do this by starting an mlflow server in this folder.
+See the mlflow documentation: https://mlflow.org/docs/latest/ml/tracking/quickstart/
+
+3. Evaluate the neural network with the conformal prediction task on the test data.
+```bash
+bash scripts/bash/train.bash CFLP-toy
+```
+This will test the model from the last run of the train script.
+If you want to test the model for a particular run, you can replace 'CFLP-toy' with the mlflow run name, which is something like 'joyful-seal-177'.
+Results will be saved to mlflow artefacts and can be viewed through the mlflow server.

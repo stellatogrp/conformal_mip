@@ -12,7 +12,7 @@ from cmippy.models import CPLinear, CPLSTM, CPRNN, CPFFN
 from cmippy.utils import get_input_size
 from cmippy.loss import GaussianKernelLoss, RescaledMSE2, LogMSE, ClippedMSE
 from cmippy.config import CONFIG
-from cmippy.gurobi.evaluate_predictor import fast_eval
+from cmippy.cp import fast_eval
 
 
 def print_iteration(
@@ -179,7 +179,6 @@ def main(cfg):
                 drop_cols=config_dict["data"]["drop_cols"],
                 n=config_dict["data"]["n"],
                 loss_fn=loss_fn,
-                prob_type=config_dict["obj_type"],
                 gap_type=config_dict["conformal"]["type"]
             )
         except Exception:

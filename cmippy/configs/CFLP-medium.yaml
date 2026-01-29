@@ -57,8 +57,8 @@ conformal:
 
 data:
   drop_cols: ['X', 'status', 'nodes', 'theta']
-  n: 100000
-  test_n: 1
+  n: 1000
+  test_n: 100
 
 ffn_info:
   hidden_dim: 100

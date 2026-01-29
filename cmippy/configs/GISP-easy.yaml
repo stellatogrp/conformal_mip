@@ -54,7 +54,7 @@ conformal:
 data:
   drop_cols: ['X', 'status', 'nodes', 'theta']
   n: 100000
-  test_n: 10
+  test_n: 100
 
 loss_info:
   loss_fn: rescaled_mse
