@@ -16,6 +16,7 @@ include = ["..."]
 source = "vcs"
 
 [project]
+requires-python = ">=3.12,<3.13"
 name = "cmippy"
 description = "Code for the paper Conformal Prediction for Early Stopping in Mixed Integer Optimization"
 readme = "README.md"
@@ -44,7 +45,7 @@ dev = [
 ]
 
 copt = [
-    "coptpy>=8.0.3"
+    "coptpy"
 ]
 
 [tool.ruff]

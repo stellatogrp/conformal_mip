@@ -10,7 +10,10 @@ from omegaconf import OmegaConf
 
 from cmippy.config import CONFIG
 from cmippy.gurobi.evaluate_predictor import eval
-from cmippy.copt.evaluate_predictor import eval_copt
+try:
+    from cmippy.copt.evaluate_predictor import eval_copt
+except ImportError:
+    eval_copt = None
 from cmippy.cp import cp_model
 from cmippy.models import CPFFN, CPLSTM, CPRNN, CPLinear
 

@@ -1,1 +1,1 @@
-python scripts/train.py --config-name $1 model_type=lstm bound_output=True device=cuda
+python scripts/train.py --config-name $1 model_type=lstm bound_output=True

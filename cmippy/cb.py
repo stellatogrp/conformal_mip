@@ -2,7 +2,10 @@ import time
 
 import gurobipy as gp
 import numpy as np
-from coptpy import COPT
+try:
+    from coptpy import COPT
+except ImportError:
+    COPT = None
 
 
 def _max_bound(model, solver: str):

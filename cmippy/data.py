@@ -2,22 +2,27 @@ import argparse
 import os
 import random
 
-import coptpy as cp
+try:
+    import coptpy as cp
+    from cmippy.copt.optmodel import CoptModel
+except ImportError:
+    cp, CoptModel = None, None
+
 import gurobipy as gp
 import numpy as np
 import pandas as pd
 import yaml
 from joblib import Parallel, delayed
-from cmippy.config import CONFIG
-from cmippy.copt.optmodel import CoptModel
+
 from cmippy.cb import get_covariates
+from cmippy.config import CONFIG
 from cmippy.gurobi.optmodel import Model
 
 WAS = CONFIG.WEIGHTED_AVGS
 
 
 def get_df_gp(
-        model: gp.Model,
+        model,
         theta: np.array,
 ):
 
@@ -42,7 +47,7 @@ def get_df_gp(
 
 
 def get_df_copt(
-    model: cp.Model,
+    model,
     theta: np.array,
 ):
     model = CoptModel(
@@ -120,7 +125,7 @@ if __name__ == "__main__":
         type=str,
         required=False,
         default="gurobi",
-        help="Solver to use: 'gurobi' or 'scip'"
+        help="Solver to use: 'gurobi' or 'copt'"
     )
     parser.add_argument(
         "--shuffle",
@@ -136,6 +141,7 @@ if __name__ == "__main__":
         config = yaml.safe_load(f)
     
     CONFIG.from_dict(config['cmippyconfig'])
+    solver = config['solver']
 
     def do(file, mip_folder, output_folder, config=CONFIG):
         try:
@@ -149,11 +155,11 @@ if __name__ == "__main__":
                         return
 
                 theta = np.load(os.path.join(mip_folder, file.rsplit(".", 1)[0] + "_theta.npy"), allow_pickle=True).flatten()
-                if args.solver == "gurobi":
+                if solver == "gurobi":
                     model = gp.read(os.path.join(mip_folder, file))
                     model.setParam('Seed', j+1)
                     df, sol = get_df_gp(model, theta)
-                elif args.solver == "copt":
+                elif solver == "copt":
                     env = cp.Envr()
                     model = env.createModel("")
                     model.read(os.path.join(mip_folder, file))
@@ -196,6 +202,7 @@ if __name__ == "__main__":
 
     if args.do_eval:
         files = os.listdir(val_folder)
+        output_folder = config['dataset'][args.solver]['eval_dir']
         if args.shuffle:
             random.shuffle(files)
         os.makedirs(os.path.join(output_folder, 'sols'), exist_ok=True)
