@@ -10,3 +10,4 @@ slurm/
 outputs/
 mlruns/
 tmp/
+__pycache__/
