@@ -6,19 +6,12 @@ import numpy as np
 import pandas as pd
 import torch
 from joblib import Parallel, delayed
-from torch import nn
-from tqdm import tqdm
 from tqdm_joblib import tqdm_joblib
 
 from cmippy.config import CONFIG
 from cmippy.copt.optmodel import CoptModel, standard_copt_model_settings
 from cmippy.models import CPLSTM
-from cmippy.utils import (
-    get_input_size,
-    normalize_input,
-    relative_gap,
-    unnormalize_output,
-)
+from cmippy.utils import get_input_size
 
 WAS = CONFIG.WEIGHTED_AVGS
 
@@ -48,8 +41,25 @@ class StopOnThirdSol(cp.CallbackBase):
             self.interrupt()
         
 
-def eval_copt(predictor_path, cp_gap, target_gap, test_dir, version='absolute', baselines=True, max_test_size: int = 1, drop_cols=[], rescaling_data=None, start: int=0, cores: int=1, silent=False, just_one=False,
-         shuffle=False, seed=0, config=None):
+def eval_copt(
+        predictor_path,
+        cp_gap,
+        target_gap,
+        test_dir,
+        version='absolute',
+        baselines=True,
+        max_test_size: int = 1,
+        drop_cols=[],
+        rescaling_data=None,
+        start: int=0,
+        cores: int=1, 
+        silent=False,
+        just_one=False,
+        shuffle=False,
+        seed=0,
+        config=None
+    ):
+
     results = []
     config_dict = config
 

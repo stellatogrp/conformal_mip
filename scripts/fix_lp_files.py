@@ -1,7 +1,8 @@
 import os
 
 """
-This file is just needed to fix the broken MVC-medium LP files from distributional MIPLIB. You don't need it other than that.
+This file is just needed to fix the broken MVC-medium LP files from distributional MIPLIB.
+You don't need it other than that.
 """
 
 def append_end_to_lp_files(directory):
@@ -18,11 +19,11 @@ def append_end_to_lp_files(directory):
 
 if __name__ == "__main__":
     append_end_to_lp_files(
-        "instances/indset/test"
+        "instances/MVC-medium/test"
     )
     append_end_to_lp_files(
-        "instances/indset/val"
+        "instances/MVC-medium/val"
     )
     append_end_to_lp_files(
-        "instances/indset/train"
+        "instances/MVC-medium/train"
     )
