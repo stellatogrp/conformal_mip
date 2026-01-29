@@ -29,14 +29,14 @@ Here is where you change the device the NN is stored on (default is CUDA), chang
 
 from now on we will demonstrate on the toy instance, CFLP-toy, using the GUROBI solver. To change the solver change the appropriate entry in the config.
 
-3. Generate training data for the neural network.
+4. Generate training data for the neural network.
 ```bash
 bash scripts/bash/generate_train_data.bash CFLP-toy <N-CORES>
 ```
 This will populate a folder in instance_data/gurobi/CFLP-toy with training data from the GUROBI solves.
 For large instances this can take many hours. We recommend using many cores if possible.
 
-2. Train the neural network.
+5. Train the neural network.
 ```bash
 bash scripts/bash/train.bash CFLP-toy
 ```
@@ -45,7 +45,7 @@ We recommend using mlflow to monitor the training and to easily observe the resu
 You can do this by starting an mlflow server in this folder.
 See the mlflow documentation: https://mlflow.org/docs/latest/ml/tracking/quickstart/
 
-3. Evaluate the neural network with the conformal prediction task on the test data.
+6. Evaluate the neural network with the conformal prediction task on the test data.
 ```bash
 bash scripts/bash/train.bash CFLP-toy <N-CORES>
 ```

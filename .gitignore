@@ -1,4 +1,10 @@
-instances/
+# Ignore everything in instances
+instances/*
+
+# But NOT this specific folder
+!instances/CFLP-toy/
+!instances/CFLP-toy/**
+
 instance_data/
 *.csv
 *.lp

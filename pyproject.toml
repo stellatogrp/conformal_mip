@@ -26,10 +26,25 @@ authors = [
     { name = "ANONYMIZED FOR REVIEW", email = "" },
 ]
 dependencies = [
+    "numpy",
+    "torch",
+    "matplotlib",
+    "tqdm",
+    "tqdm-joblib",
+    "matplotlib",
+    "joblib",
+    "mlflow>=3.8.0",
+    "hydra-core",
+    "pandas",
+    "gurobipy>=10.0",
 ]
 
 [project.optional-dependencies]
 dev = [
+]
+
+copt = [
+    "coptpy>=8.0.3"
 ]
 
 [tool.ruff]
