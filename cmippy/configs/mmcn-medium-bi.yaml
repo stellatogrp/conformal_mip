@@ -1,0 +1,69 @@
+mlflow:
+  experiment_name: MMCN-medium-BI
+
+hydra:
+  job:
+    chdir: False
+
+solver: gurobi
+dataset:
+  gurobi:
+    train_dir: instance_data/gurobi/MMCN-medium-BI/train
+    eval_dir: instance_data/gurobi/MMCN-medium-BI/val
+    test_dir: instance_data/gurobi/MMCN-medium-BI/test
+  scip:
+    train_dir: instance_data/scip/MMCN-medium-BI/train
+    eval_dir: instance_data/scip/MMCN-medium-BI/val
+    test_dir: instance_data/scip/MMCN-medium-BI/test
+  copt:
+    train_dir: instance_data/copt/MMCN-medium-BI/train
+    eval_dir: instance_data/copt/MMCN-medium-BI/val
+    test_dir: instance_data/copt/MMCN-medium-BI/test
+
+problems:
+  train_dir: instances/MMCN-medium-BI/train
+  eval_dir: instances/MMCN-medium-BI/val
+  test_dir: instances/MMCN-medium-BI/test
+
+cmippyconfig:
+  WEIGHTED_AVGS: [0.01, 1, 5]
+  MAX_BOUND: 10000000
+  MEMLIMIT: 4
+  CB_TIME_THRESH: 1.0
+
+obj_type: minimize
+
+epochs: 100000000
+batch_size: 16
+device: cuda
+lr: 1
+test_freq: 100
+
+model_type: lstm
+bound_output: True
+
+rnn_info:
+  hidden_size: 256
+  num_layers: 3
+
+lm_info:
+  logtime: True
+  loggap: True
+
+conformal:
+  alpha: 0.1
+  epsilon: 1076
+  type: absolute
+
+data:
+  drop_cols: ['X', 'status', 'nodes', 'theta']
+  n: 1000000000
+  test_n: 10
+
+loss_info:
+  loss_fn: rescaled_mse
+  sigma: 1
+
+ffn_info:
+  hidden_dim: 256
+  n_layers: 3

@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=1 python scripts/train.py --config-name $1 lr=0.00001 model_type=lstm bound_output=True device=cuda solver=copt loss_info.loss_fn=mse

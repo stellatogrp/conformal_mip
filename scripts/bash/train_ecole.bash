@@ -1,0 +1,1 @@
+python scripts/train.py --config-name $1 lr=0.0001 model_type=lstm bound_output=True device=cuda solver=ecole

@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=0 python scripts/test.py --run_name=$1 --cores=$2 --alpha=0.05 --epsilon=0.001 --device=cuda
