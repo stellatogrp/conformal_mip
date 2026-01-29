@@ -14,7 +14,6 @@ from cmippy.config import CONFIG
 from cmippy.copt.optmodel import CoptModel, standard_copt_model_settings
 from cmippy.models import CPLSTM
 from cmippy.utils import (
-    get_cutoff_from_pairs,
     get_input_size,
     normalize_input,
     relative_gap,

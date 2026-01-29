@@ -47,7 +47,7 @@ See the mlflow documentation: https://mlflow.org/docs/latest/ml/tracking/quickst
 
 3. Evaluate the neural network with the conformal prediction task on the test data.
 ```bash
-bash scripts/bash/train.bash CFLP-toy
+bash scripts/bash/train.bash CFLP-toy <N-CORES>
 ```
 This will test the model from the last run of the train script.
 If you want to test the model for a particular run, you can replace 'CFLP-toy' with the mlflow run name, which is something like 'joyful-seal-177'.

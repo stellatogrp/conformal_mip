@@ -59,6 +59,7 @@ def eval(
                 model = gp.read(f'{test_dir}/{f.split("/")[-1]}', env=env)
                 return model, theta, env
 
+            # load and evaluate CP
             model, theta, env = loadit()
             model = Model(
                 model=model,
@@ -84,6 +85,7 @@ def eval(
                 data = model.model._data
                 return data
 
+            # load and evaluate GUROBI1
             model, theta, env = loadit()
             if version == 'relative':
                 standard_gp_model_settings(model, gap_relative=target_gap)
@@ -96,6 +98,7 @@ def eval(
             f_n_nodes = model.getAttr('NodeCount')
             env.dispose()
 
+            # load and evaluate GUROBI3
             model, theta, env = loadit()
             if version == 'relative':
                 standard_gp_model_settings(model, gap_relative=target_gap)
@@ -108,6 +111,7 @@ def eval(
             t_n_nodes = model.getAttr('NodeCount')
             env.dispose()
 
+            # load and evaluate GUROBI
             model, theta, env = loadit()
             if version == 'relative':
                 standard_gp_model_settings(model, gap_relative=target_gap)
@@ -119,33 +123,37 @@ def eval(
             ti_n_nodes = model.getAttr('NodeCount')
             env.dispose()
 
+            # solve the problem to a high degree of accuracy to compare suboptimality
             model, theta, env = loadit()
             standard_gp_model_settings(model, gap_relative=1e-6)
             model.optimize()
             env.dispose()
+
+            # suboptimalities
             cp_subopt = cp_ov - model.ObjVal if model.ModelSense == gp.GRB.MINIMIZE else model.ObjVal - cp_ov
             t_subopt = t_res - model.ObjVal if model.ModelSense == gp.GRB.MINIMIZE else model.ObjVal - t_res
             f_subopt = f_res - model.ObjVal if model.ModelSense == gp.GRB.MINIMIZE else model.ObjVal - f_res
             ti_subopt = ti_ov - model.ObjVal if model.ModelSense == gp.GRB.MINIMIZE else model.ObjVal - ti_ov
 
+            # return data
             return{
                     'cp_time': cp_time,
                     'cp_subopt': cp_subopt,
                     'cp_rel_subopt': cp_subopt / (np.abs(model.ObjVal) + 1e-8),
                     'cp_cb_time': cp_cb_time,
                     'cp_n_nodes': cp_n_nodes,
-                    'ti_time': ti_time,
-                    'ti_subopt': ti_subopt,
-                    'ti_rel_subopt': ti_subopt / (np.abs(model.ObjVal) + 1e-8),
-                    'ti_n_nodes': ti_n_nodes,
-                    'f_time': f_time,
-                    'f_subopt': f_subopt,
-                    'f_rel_subopt': f_subopt / (np.abs(model.ObjVal) + 1e-8),
-                    'f_n_nodes': f_n_nodes,
-                    't_time': t_time,
-                    't_subopt': t_subopt,
-                    't_rel_subopt': t_subopt / (np.abs(model.ObjVal) + 1e-8),
-                    't_n_nodes': t_n_nodes,
+                    'solver_time': ti_time,
+                    'solver_subopt': ti_subopt,
+                    'solver_rel_subopt': ti_subopt / (np.abs(model.ObjVal) + 1e-8),
+                    'solver_n_nodes': ti_n_nodes,
+                    'solver1_time': f_time,
+                    'solver1_subopt': f_subopt,
+                    'solver1_rel_subopt': f_subopt / (np.abs(model.ObjVal) + 1e-8),
+                    'solver1_n_nodes': f_n_nodes,
+                    'solver3_time': t_time,
+                    'solver3_subopt': t_subopt,
+                    'solver3_rel_subopt': t_subopt / (np.abs(model.ObjVal) + 1e-8),
+                    'solver3_n_nodes': t_n_nodes,
                     'ov': model.ObjVal
                 }
 

@@ -33,7 +33,7 @@ obj_type: maximize
 epochs: 100000000
 batch_size: 16
 device: cuda
-lr: 1
+lr: 0.0001
 test_freq: 100
 
 model_type: lstm
@@ -48,7 +48,7 @@ lm_info:
   loggap: True
 
 conformal:
-  alpha: 0.1
+  alpha: 0.05
   epsilon: 21.3797
   type: absolute
 

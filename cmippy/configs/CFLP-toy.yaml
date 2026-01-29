@@ -1,5 +1,5 @@
 mlflow:
-  experiment_name: CFLP-medium
+  experiment_name: CFLP-toy
 
 hydra:
   job:
@@ -32,8 +32,8 @@ obj_type: minimize
 epochs: 10000
 batch_size: 128
 device: cuda
-lr: 0.1
-test_freq: 100
+lr: 0.0001
+test_freq: 10
 
 model_type: lstm
 bound_output: True
@@ -51,7 +51,7 @@ lm_info:
   loggap: True
 
 conformal:
-  alpha: 0.1
+  alpha: 0.05
   epsilon: 32.31723
   type: absolute
 
