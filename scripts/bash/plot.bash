@@ -1,1 +1,1 @@
-python scripts/plot.py $1 $2
+python scripts/make_run_plots.py --problem $1 --solver $2

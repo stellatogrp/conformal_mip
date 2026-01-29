@@ -57,3 +57,4 @@ Results will be saved to mlflow artefacts and can be viewed through the mlflow s
 ```bash
 bash scripts/bash/plot.bash CFLP-toy gurobi
 ```
+This command makes plots for the last trained instance of CFLP-toy. Plots will be saved to outputs/plots.
