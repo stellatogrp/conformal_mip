@@ -1,11 +1,12 @@
 Code for the paper "Conformal Prediction for Early Stopping in Mixed Integer Optimization".
 This code is anonymized and this branch was last modified on Jan 28th 2026.
+THIS IS THE ICML2026 BRANCH.
 
 INSTRUCTIONS:
 
 1. Install necessary packages
 ```bash
-pip install -e . # install cmippy package and all requirements
+pip install -e .
 ```
 Ensure you have either GUROBI installed with a valid licence.
 If you want to use COPT, you must install it manually. See https://guide.coap.online/copt/en-doc/install.html.
