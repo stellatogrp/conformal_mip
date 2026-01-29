@@ -9,9 +9,6 @@ allow-direct-references = true
 packages = ["cmippy"]
 exclude = []
 
-[tool.hatch.build.targets.sdist]
-include = ["..."]
-
 [tool.hatch.version]
 source = "vcs"
 
@@ -34,7 +31,7 @@ dependencies = [
     "tqdm-joblib",
     "matplotlib",
     "joblib",
-    "mlflow>=3.8.0",
+    "mlflow",
     "hydra-core",
     "pandas",
     "gurobipy>=10.0",
@@ -47,11 +44,6 @@ dev = [
 copt = [
     "coptpy"
 ]
-
-[tool.ruff]
-exclude = ["build", "examples", "instances", "docs", "*__init__.py"]
-line-length = 100
-target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]

@@ -31,7 +31,7 @@ from now on we will demonstrate on the toy instance, CFLP-toy, using the GUROBI 
 
 4. Generate training data for the neural network.
 ```bash
-bash scripts/bash/generate_train_data.bash CFLP-toy <N-CORES>
+bash scripts/bash/generate_train_data.bash CFLP-toy <N-CORES> gurobi
 ```
 This will populate a folder in instance_data/gurobi/CFLP-toy with training data from the GUROBI solves.
 For large instances this can take many hours. We recommend using many cores if possible.
@@ -47,10 +47,13 @@ See the mlflow documentation: https://mlflow.org/docs/latest/ml/tracking/quickst
 
 6. Evaluate the neural network with the conformal prediction task on the test data.
 ```bash
-bash scripts/bash/train.bash CFLP-toy <N-CORES>
+bash scripts/bash/test.bash CFLP-toy <N-CORES>
 ```
 This will test the model from the last run of the train script.
 If you want to test the model for a particular run, you can replace 'CFLP-toy' with the mlflow run name, which is something like 'joyful-seal-177'.
 Results will be saved to mlflow artefacts and can be viewed through the mlflow server.
 
 7. Create plots
+```bash
+bash scripts/bash/plot.bash CFLP-toy gurobi
+```
