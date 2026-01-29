@@ -1,0 +1,65 @@
+mlflow:
+  experiment_name: CFLP-medium
+
+hydra:
+  job:
+    chdir: False
+
+solver: gurobi
+dataset:
+  gurobi:
+    train_dir: instance_data/gurobi/CFLP-toy/train
+    eval_dir: instance_data/gurobi/CFLP-toy/val
+    test_dir: instance_data/gurobi/CFLP-toy/test
+  copt:
+    train_dir: instance_data/copt/CFLP-toy/train
+    eval_dir: instance_data/copt/CFLP-toy/val
+    test_dir: instance_data/copt/CFLP-toy/test
+
+problems:
+  train_dir: instances/CFLP-toy/train
+  eval_dir: instances/CFLP-toy/val
+  test_dir: instances/CFLP-toy/test
+
+cmippyconfig:
+  WEIGHTED_AVGS: [0.01, 1, 5]
+  MAX_BOUND: 1000000
+  MEMLIMIT: 4
+  CB_TIME_THRESH: 0.1
+
+obj_type: minimize
+
+epochs: 10000
+batch_size: 128
+device: cuda
+lr: 0.1
+test_freq: 100
+
+model_type: lstm
+bound_output: True
+
+loss_info:
+  loss_fn: rescaled_mse
+  sigma: 1
+
+rnn_info:
+  hidden_size: 200
+  num_layers: 3
+
+lm_info:
+  logtime: True
+  loggap: True
+
+conformal:
+  alpha: 0.1
+  epsilon: 32.31723
+  type: absolute
+
+data:
+  drop_cols: ['X', 'status', 'nodes', 'theta']
+  n: 100000
+  test_n: 1
+
+ffn_info:
+  hidden_dim: 100
+  n_layers: 2
