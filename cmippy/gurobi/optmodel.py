@@ -4,7 +4,7 @@ import gurobipy as gp
 import numpy as np
 import torch
 from cmippy.config import CONFIG
-from cmippy.gurobi.cb import get_covariates
+from cmippy.cb import get_covariates
 from cmippy.utils import (
     normalize_input,
     unnormalize_output,

@@ -5,7 +5,8 @@ INSTRUCTIONS:
 
 1. Install necessary packages
 ```bash
-pip install requirements.txt
+pip install requirements.txt # required packages
+pip install -e . # install cmippy package
 ```
 Ensure you have either GUROBI or COPT installed with a valid lisence.
 

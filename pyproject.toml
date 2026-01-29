@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["loco"]
+packages = ["cmippy"]
 exclude = []
 
 [tool.hatch.build.targets.sdist]
@@ -17,7 +17,7 @@ source = "vcs"
 
 [project]
 name = "cmippy"
-description = "Code for the paper "Conformal Prediction for Early Stopping in Mixed Integer Optimization"
+description = "Code for the paper Conformal Prediction for Early Stopping in Mixed Integer Optimization"
 readme = "README.md"
 license = { text = "Commons Clause License Condition v1.0" }
 dynamic = ["version"]
@@ -37,7 +37,7 @@ exclude = ["build", "examples", "instances", "docs", "*__init__.py"]
 line-length = 100
 target-version = "py310"
 
-[rool.ruff.lint]
+[tool.ruff.lint]
 select = ["E", "F", "I"]
 
 [tool.isort]
