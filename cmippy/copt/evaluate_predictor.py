@@ -158,6 +158,10 @@ def eval_copt(predictor_path, cp_gap, target_gap, test_dir, version='absolute', 
             ti_n_nodes = model.getAttr(cp.COPT.Attr.NodeCnt)
             minimize = model.getAttr(cp.COPT.Attr.ObjSense) == cp.COPT.MINIMIZE
 
+            model, theta, env = loadit()
+            standard_copt_model_settings(model, gap_relative=1e-6)
+            model.solve()
+
             cp_subopt = cp_ov - model.getAttr(cp.COPT.Attr.BestObj) if minimize else model.getAttr(cp.COPT.Attr.BestObj) - cp_ov
             t_subopt = t_res - model.getAttr(cp.COPT.Attr.BestObj) if minimize else model.getAttr(cp.COPT.Attr.BestObj) - t_res
             f_subopt = f_res - model.getAttr(cp.COPT.Attr.BestObj) if minimize else model.getAttr(cp.COPT.Attr.BestObj) - f_res
