@@ -145,6 +145,7 @@ def main(
         run_name = mlrun.data.tags["mlflow.runName"]
         run_id = mlrun.info.run_id
         model, rescaling_data, config_dict, mlrun, run_id, model_path = prep_from_mlflow_name(run_name)
+    artefact_dir = mlrun.info.artifact_uri 
 
     if device is not None:
         config_dict["device"] = device
@@ -172,13 +173,15 @@ def main(
 
     # evaluate the model
     if config_dict["solver"] == "gurobi":
-        test_results = eval(model, cp_gap, epsilon, config_dict["problems"]["test_dir"], drop_cols=config_dict["data"]["drop_cols"],
+        test_results = eval(model_path, cp_gap, epsilon, config_dict["problems"]["test_dir"], drop_cols=config_dict["data"]["drop_cols"],
                             max_test_size=config_dict["data"]["test_n"],
-                            rescaling_data=rescaling_data, cores=cores, version=config_dict["conformal"]["type"])
+                            rescaling_data=rescaling_data, cores=cores, version=config_dict["conformal"]["type"], config=config_dict,
+                            save_dir=artefact_dir)
     elif config_dict["solver"] == "copt":
         test_results = eval_copt(model_path, cp_gap, epsilon, config_dict["problems"]["test_dir"], drop_cols=config_dict["data"]["drop_cols"],
                             max_test_size=config_dict["data"]["test_n"],
-                            rescaling_data=rescaling_data, cores=cores, version=config_dict["conformal"]["type"], config=config_dict)
+                            rescaling_data=rescaling_data, cores=cores, version=config_dict["conformal"]["type"], config=config_dict,
+                            save_dir=artefact_dir)
     else:
         raise ValueError("solver must be one of ['gurobi', 'copt']")
 

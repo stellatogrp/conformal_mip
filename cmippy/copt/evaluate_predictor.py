@@ -10,8 +10,7 @@ from tqdm_joblib import tqdm_joblib
 
 from cmippy.config import CONFIG
 from cmippy.copt.optmodel import CoptModel, standard_copt_model_settings
-from cmippy.models import CPLSTM
-from cmippy.utils import get_input_size
+from cmippy.models import load_predictor_from_config
 
 WAS = CONFIG.WEIGHTED_AVGS
 
@@ -57,11 +56,11 @@ def eval_copt(
         just_one=False,
         shuffle=False,
         seed=0,
-        config=None
+        config=None,
+        save_dir: str=None
     ):
 
     results = []
-    config_dict = config
 
     if os.path.isdir(test_dir):
         files = os.listdir(test_dir)
@@ -79,12 +78,7 @@ def eval_copt(
         try:
             print(f'Processing file {i}: {f}')
             if predictor_path is not None:
-                predictor = CPLSTM(
-                    get_input_size(config_dict["dataset"][config_dict["solver"]]["train_dir"], config_dict["data"]["drop_cols"]),
-                    config_dict["rnn_info"],
-                    config_dict["device"],
-                    bound=config_dict["bound_output"]
-                )
+                predictor = load_predictor_from_config(config)
                 predictor.load_state_dict(torch.load(predictor_path))
                 predictor.reset()
 
@@ -92,13 +86,16 @@ def eval_copt(
             path_to_file_without_name = test_dir
             prob_name = path_to_file_without_name.split('/')[-2]
             out_file = filename.split('.')[-2] + '_results.json'
-            out_dir = 'temp_results/' + prob_name
-            os.makedirs(out_dir, exist_ok=True)
-            out_path = os.path.join(out_dir, out_file)
 
-            if os.path.exists(out_path):
-                with open(out_path, 'r') as f:
-                    return json.load(f)
+            if save_dir is not None:
+                out_dir = save_dir + '/tmp_test_results/' + prob_name
+                os.makedirs(out_dir, exist_ok=True)
+                out_path = os.path.join(out_dir, out_file)
+                if os.path.exists(out_path):
+                    with open(out_path, 'r') as f:
+                        return json.load(f)
+            else:
+                out_path = None
 
             def loadit():
                 env = cp.Envr()
@@ -180,31 +177,32 @@ def eval_copt(
             out = {
                     'cp_time': cp_time,
                     'cp_subopt': cp_subopt,
-                    'cp_rel_subopt': cp_subopt / (np.abs(model.ObjVal) + 1e-8),
+                    'cp_rel_subopt': cp_subopt / (abs(model.ObjVal) + 1e-8),
                     'cp_cb_time': cp_cb_time,
                     'cp_n_nodes': cp_n_nodes,
                     'cp_ov': cp_ov,
                     'solver_time': ti_time,
                     'solver_subopt': ti_subopt,
-                    'solver_rel_subopt': ti_subopt / (np.abs(model.ObjVal) + 1e-8),
+                    'solver_rel_subopt': ti_subopt / (abs(model.ObjVal) + 1e-8),
                     'solver_n_nodes': ti_n_nodes,
                     'solver_ov': ti_ov,
                     'solver1_time': f_time,
                     'solver1_subopt': f_subopt,
-                    'solver1_rel_subopt': f_subopt / (np.abs(model.ObjVal) + 1e-8),
+                    'solver1_rel_subopt': f_subopt / (abs(model.ObjVal) + 1e-8),
                     'solver1_ov': t_res,
                     'solver1_n_nodes': f_n_nodes,
                     'solver3_time': t_time,
                     'solver3_subopt': t_subopt,
                     'solver3_ov': f_res,
-                    'solver3_rel_subopt': t_subopt / (np.abs(model.ObjVal) + 1e-8),
+                    'solver3_rel_subopt': t_subopt / (abs(model.ObjVal) + 1e-8),
                     'solver3_n_nodes': t_n_nodes,
                     'ov': model.ObjVal,
                     'file': f
                 }
             # save out to file
-            with open(out_path, 'w') as f_out:
-                json.dump(out, f_out)
+            if out_path is not None:
+                with open(out_path, 'w') as f_out:
+                    json.dump(out, f_out)
             del predictor
             torch.cuda.empty_cache()
             return out

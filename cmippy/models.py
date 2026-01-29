@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from cmippy.utils import get_input_size
 
 
 class CPLSTM(nn.Module):
@@ -224,3 +225,39 @@ class CPLinear(nn.Module):
 
     def reset(self):
         pass
+
+
+def load_predictor_from_config(config_dict):
+    input_size = get_input_size(config_dict["dataset"][config_dict["solver"]]["train_dir"],
+                                config_dict["data"]["drop_cols"])
+    if config_dict["model_type"] == "linear":
+        model = CPLinear(
+            input_size,
+            config_dict["device"],
+            config_dict["bound_output"],
+            config_dict["lm_info"]["logtime"],
+            config_dict["lm_info"]["loggap"],
+        )
+    elif config_dict["model_type"] == "lstm":
+        model = CPLSTM(
+            input_size,
+            config_dict["rnn_info"],
+            config_dict["device"],
+            config_dict["bound_output"],
+        )
+    elif config_dict["model_type"] == "rnn":
+        model = CPRNN(
+            input_size,
+            config_dict["rnn_info"],
+            config_dict["device"],
+            config_dict["bound_output"],
+        )
+    elif config_dict["model_type"] == "feedforward":
+        model = CPFFN(
+            input_size,
+            config_dict["ffn_info"]["hidden_dim"],
+            config_dict["ffn_info"]["n_layers"],
+            config_dict["device"],
+            config_dict["bound_output"],
+        )
+    return model
