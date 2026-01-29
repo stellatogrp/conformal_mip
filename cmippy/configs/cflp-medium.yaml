@@ -11,14 +11,6 @@ dataset:
     train_dir: instance_data/gurobi/CFLP-medium/train
     eval_dir: instance_data/gurobi/CFLP-medium/val
     test_dir: instance_data/gurobi/CFLP-medium/test
-  ecole:
-    train_dir: instance_data/ecole/CFLP-medium/train
-    eval_dir: instance_data/ecole/CFLP-medium/val
-    test_dir: instance_data/ecole/CFLP-medium/test
-  scip:
-    train_dir: instance_data/scip/CFLP-medium/train
-    eval_dir: instance_data/scip/CFLP-medium/val
-    test_dir: instance_data/scip/CFLP-medium/test
   copt:
     train_dir: instance_data/copt/CFLP-medium/train
     eval_dir: instance_data/copt/CFLP-medium/val

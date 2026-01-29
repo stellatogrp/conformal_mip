@@ -11,10 +11,6 @@ dataset:
     train_dir: instance_data/gurobi/MIS-medium/train
     eval_dir: instance_data/gurobi/MIS-medium/val
     test_dir: instance_data/gurobi/MIS-medium/test
-  scip:
-    train_dir: instance_data/scip/MIS-medium/train
-    eval_dir: instance_data/scip/MIS-medium/val
-    test_dir: instance_data/scip/MIS-medium/test
   copt:
     train_dir: instance_data/copt/MIS-medium/train
     eval_dir: instance_data/copt/MIS-medium/val

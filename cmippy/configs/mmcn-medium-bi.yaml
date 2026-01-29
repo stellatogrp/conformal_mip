@@ -11,10 +11,6 @@ dataset:
     train_dir: instance_data/gurobi/MMCN-medium-BI/train
     eval_dir: instance_data/gurobi/MMCN-medium-BI/val
     test_dir: instance_data/gurobi/MMCN-medium-BI/test
-  scip:
-    train_dir: instance_data/scip/MMCN-medium-BI/train
-    eval_dir: instance_data/scip/MMCN-medium-BI/val
-    test_dir: instance_data/scip/MMCN-medium-BI/test
   copt:
     train_dir: instance_data/copt/MMCN-medium-BI/train
     eval_dir: instance_data/copt/MMCN-medium-BI/val

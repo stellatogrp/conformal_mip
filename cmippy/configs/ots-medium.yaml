@@ -11,10 +11,6 @@ dataset:
     train_dir: instance_data/gurobi/OTS-medium/train
     eval_dir: instance_data/gurobi/OTS-medium/val
     test_dir: instance_data/gurobi/OTS-medium/test
-  scip:
-    train_dir: instance_data/scip/OTS-medium/train
-    eval_dir: instance_data/scip/OTS-medium/val
-    test_dir: instance_data/scip/OTS-medium/test
   copt:
     train_dir: instance_data/copt/OTS-medium/train
     eval_dir: instance_data/copt/OTS-medium/val

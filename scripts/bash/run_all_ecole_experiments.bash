@@ -1,2 +1,0 @@
-python scripts/train.py --config-name cflp-medium lr=0.0001 model_type=lstm bound_output=True device=cuda solver=ecole &
-python scripts/train.py --config-name nnv-easy lr=0.0001 model_type=lstm bound_output=True device=cuda solver=ecole

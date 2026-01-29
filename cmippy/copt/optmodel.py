@@ -14,11 +14,6 @@ from cmippy.utils import (
 
 
 def get_data_matrix_callback(state, drop_cols=(), dataframe=False):
-    """
-    COPT version: keep *all* callback state in `state` (not on the solver model object),
-    because solver model objects may not allow arbitrary attributes.
-    """
-
     covs = get_covariates(state, True, drop_cols=list(drop_cols), solver="copt")
     if not dataframe:
         X = np.array(list(covs.values()))
@@ -79,14 +74,9 @@ class PredictGapCallback(cp.CallbackBase):
             return
 
         where = self.where()
-
-        # -------------------------
-        # "MIPSOL" equivalent: after a new incumbent was found
-        # -------------------------
         if where == COPT.CBCONTEXT_INCUMBENT:
-            # BestObj/BestBnd/HasIncumbent can be obtained in any context. :contentReference[oaicite:1]{index=1}
             sol_val = self.getInfo(COPT.CBInfo.BestObj)
-            sol = self.getIncumbent(st["vars"])  # incumbent values for requested vars :contentReference[oaicite:2]{index=2}
+            sol = self.getIncumbent(st["vars"])
 
             if st["best_ov"] is None:
                 st["best_ov"] = sol_val
@@ -105,14 +95,11 @@ class PredictGapCallback(cp.CallbackBase):
 
             st["last_cb_time"] = time.time()
 
-        # -------------------------
-        # "MIP" equivalent: node callback
-        # -------------------------
         if where == COPT.CBCONTEXT_MIPNODE:
             
             self._data["best_ov"] = self.getInfo(COPT.CBInfo.BestObj)
             self._data["best_bound"] = self.getInfo(COPT.CBInfo.BestBnd)
-            self._data["node_count"] = 1 #sself.getInfo(COPT.CbInfo.NodeCnt)
+            self._data["node_count"] = self.getInfo(COPT.CBInfo.NodeCnt)
 
             X = get_data_matrix_callback(self, drop_cols=st["drop_cols"], dataframe=True)
 
@@ -150,7 +137,6 @@ class PredictGapCallback(cp.CallbackBase):
             has_inc = self.getInfo(COPT.CBInfo.HasIncumbent)
             if has_inc != 0:
                 if (st["pred_gap"] > gap_pred) and (not st["normalize_in_cb"]):
-                    # In COPT, terminating from callback is supported. :contentReference[oaicite:3]{index=3}
                     self.interrupt()
                 elif st["pred_gap"] > gap_pred / (abs(lb) + 0.1) and st["normalize_in_cb"]:
                     self.interrupt()
@@ -161,14 +147,6 @@ class PredictGapCallback(cp.CallbackBase):
 
 
 class CoptModel:
-    """
-    Drop-in wrapper analogous to your Gurobi wrapper, but for coptpy.
-
-    Key difference vs gurobipy:
-    - Do NOT do `model._predictor = ...` on the solver model; keep state in Python objects.
-      (SCIP + many solver wrappers don't allow arbitrary attributes; this avoids that entirely.)
-    """
-
     def __init__(
         self,
         model: cp.Model,
@@ -202,10 +180,8 @@ class CoptModel:
         self.model._max_bound = max_bound
 
     def optimize(self):
-        # Capture vars once (also used in callback to get incumbent vector)
         vars_ = self.model.getVars()
 
-        # Objective sense attribute exists in COPT. :contentReference[oaicite:4]{index=4}
         objsense = self.model.getAttr(COPT.Attr.ObjSense)
 
         state = dict(
@@ -235,8 +211,6 @@ class CoptModel:
         if self.predictor is not None:
             self.predictor.reset()
 
-        # NOTE: your `standard_gp_model_settings(...)` is currently in a *gurobi* module.
-        # You likely need to implement an analogous function for COPT params (gap/time/etc).
         if self.predictor_type == "relative":
             standard_copt_model_settings(self.model, gap_relative=self.target_gap)
         elif self.predictor_type == "absolute":
@@ -244,7 +218,6 @@ class CoptModel:
 
         cb = PredictGapCallback(state)
 
-        # Register callback for multiple contexts via bitwise-or. :contentReference[oaicite:5]{index=5}
         self.model.setCallback(
             cb,
             COPT.CBCONTEXT_INCUMBENT | COPT.CBCONTEXT_MIPNODE,
@@ -255,14 +228,11 @@ class CoptModel:
         self.model._data = state
         self.model._theta = state["theta"]
 
-        # Post-solve attrs: NodeCnt and SolvingTime exist. :contentReference[oaicite:6]{index=6}
         runtime = float(self.model.getAttr(COPT.Attr.SolvingTime))
         n_nodes = int(self.model.getAttr(COPT.Attr.NodeCnt))
 
-        # Variable values (x) are accessible via Var.x in coptpy.
         x = np.array([v.x for v in vars_], dtype=float)
 
-        # BestObj attribute exists (for MIP). :contentReference[oaicite:7]{index=7}
         ov = float(self.model.getAttr(COPT.Attr.BestObj))
 
         return {

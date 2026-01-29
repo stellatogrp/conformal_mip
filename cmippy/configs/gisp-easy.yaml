@@ -11,10 +11,6 @@ dataset:
     train_dir: instance_data/gurobi/GISP-easy/train
     eval_dir: instance_data/gurobi/GISP-easy/val
     test_dir: instance_data/gurobi/GISP-easy/test
-  scip:
-    train_dir: instance_data/scip/GISP-easy/train
-    eval_dir: instance_data/scip/GISP-easy/val
-    test_dir: instance_data/scip/GISP-easy/test
   copt:
     train_dir: instance_data/copt/GISP-easy/train
     eval_dir: instance_data/copt/GISP-easy/val

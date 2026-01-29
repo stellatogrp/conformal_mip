@@ -11,18 +11,11 @@ dataset:
     train_dir: instance_data/gurobi/MVC-medium/train
     eval_dir: instance_data/gurobi/MVC-medium/val
     test_dir: instance_data/gurobi/MVC-medium/test
-  ecole:
-    train_dir: instance_data/ecole/MVC-medium/train
-    eval_dir: instance_data/ecole/MVC-medium/val
-    test_dir: instance_data/ecole/MVC-medium/test
-  scip:
-    train_dir: instance_data/scip/MVC-medium/train
-    eval_dir: instance_data/scip/MVC-medium/val
-    test_dir: instance_data/scip/MVC-medium/test
   copt:
     train_dir: instance_data/copt/MVC-medium/train
     eval_dir: instance_data/copt/MVC-medium/val
     test_dir: instance_data/copt/MVC-medium/test
+
 problems:
   train_dir: instances/MVC-medium/train
   eval_dir: instances/MVC-medium/val

@@ -22,7 +22,6 @@ def print_iteration(
     print(f"{epoch} \t\t {loss}")
 
 
-
 # main experiment function
 @hydra.main(config_path="../cmippy/configs/", config_name="gisp-easy.yaml", version_base="1.1")
 def main(cfg):
