@@ -52,3 +52,5 @@ bash scripts/bash/train.bash CFLP-toy <N-CORES>
 This will test the model from the last run of the train script.
 If you want to test the model for a particular run, you can replace 'CFLP-toy' with the mlflow run name, which is something like 'joyful-seal-177'.
 Results will be saved to mlflow artefacts and can be viewed through the mlflow server.
+
+7. Create plots
