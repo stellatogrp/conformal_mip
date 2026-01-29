@@ -1,10 +1,13 @@
+import json
 import os
 
+from cmippy.models import load_predictor_from_config
 import gurobipy as gp
 import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
 from tqdm_joblib import tqdm_joblib
+import torch
 
 from cmippy.config import CONFIG
 from cmippy.gurobi.optmodel import Model, standard_gp_model_settings
@@ -13,7 +16,7 @@ WAS = CONFIG.WEIGHTED_AVGS
 
 
 def eval(
-        predictor,
+        predictor_path,
         cp_gap,
         target_gap,
         test_dir,
@@ -27,7 +30,9 @@ def eval(
         silent=False,
         just_one=False,
         shuffle=False,
-        seed=0
+        seed=0,
+        save_dir: str=None,
+        config=None
     ):
 
     results = []
@@ -45,7 +50,25 @@ def eval(
 
     def do(i, f):
         try:
-            if predictor is not None:
+            filename = f
+            path_to_file_without_name = test_dir
+            prob_name = path_to_file_without_name.split('/')[-2]
+            out_file = filename.split('.')[-2] + '_results.json'
+
+            if save_dir is not None:
+                out_dir = save_dir + '/tmp_test_results/' + prob_name
+                os.makedirs(out_dir, exist_ok=True)
+                out_path = os.path.join(out_dir, out_file)
+                if os.path.exists(out_path):
+                    with open(out_path, 'r') as f:
+                        return json.load(f)
+            else:
+                out_path = None
+
+            print(f'Processing file {i}: {f}')
+            if predictor_path is not None:
+                predictor = load_predictor_from_config(config)
+                predictor.load_state_dict(torch.load(predictor_path))
                 predictor.reset()
 
             def loadit():
@@ -136,26 +159,33 @@ def eval(
             ti_subopt = ti_ov - model.ObjVal if model.ModelSense == gp.GRB.MINIMIZE else model.ObjVal - ti_ov
 
             # return data
-            return{
+            out_data = {
                     'cp_time': cp_time,
                     'cp_subopt': cp_subopt,
-                    'cp_rel_subopt': cp_subopt / (np.abs(model.ObjVal) + 1e-8),
+                    'cp_rel_subopt': cp_subopt / (abs(model.ObjVal) + 1e-8),
                     'cp_cb_time': cp_cb_time,
                     'cp_n_nodes': cp_n_nodes,
                     'solver_time': ti_time,
                     'solver_subopt': ti_subopt,
-                    'solver_rel_subopt': ti_subopt / (np.abs(model.ObjVal) + 1e-8),
+                    'solver_rel_subopt': ti_subopt / (abs(model.ObjVal) + 1e-8),
                     'solver_n_nodes': ti_n_nodes,
                     'solver1_time': f_time,
                     'solver1_subopt': f_subopt,
-                    'solver1_rel_subopt': f_subopt / (np.abs(model.ObjVal) + 1e-8),
+                    'solver1_rel_subopt': f_subopt / (abs(model.ObjVal) + 1e-8),
                     'solver1_n_nodes': f_n_nodes,
                     'solver3_time': t_time,
                     'solver3_subopt': t_subopt,
-                    'solver3_rel_subopt': t_subopt / (np.abs(model.ObjVal) + 1e-8),
+                    'solver3_rel_subopt': t_subopt / (abs(model.ObjVal) + 1e-8),
                     'solver3_n_nodes': t_n_nodes,
                     'ov': model.ObjVal
                 }
+            # save out to file
+            if out_path is not None:
+                with open(out_path, 'w') as f_out:
+                    json.dump(out_data, f_out)
+            del predictor
+            torch.cuda.empty_cache()
+            return out_data
 
         except Exception as e:
             print(f"Error processing file {f}: {e}")

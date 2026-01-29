@@ -5,10 +5,10 @@ INSTRUCTIONS:
 
 1. Install necessary packages
 ```bash
-pip install requirements.txt # required packages
-pip install -e . # install cmippy package
+pip install -e . # install cmippy package and all requirements
 ```
-Ensure you have either GUROBI or COPT installed with a valid lisence.
+Ensure you have either GUROBI installed with a valid licence.
+If you want to use COPT, you must install it manually. See https://guide.coap.online/copt/en-doc/install.html.
 
 2. Download distributional MIPLIB instances from https://sites.google.com/usc.edu/distributional-miplib/home.
 You should unzip the folder downloaded and place it in the 'instances' folder in this repository. 
